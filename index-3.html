@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="FocusLife — Plan. Focus. Live.">
+<title>FocusLife — Plan. Focus. Live.</title>
+<style>
+:root{--bg:#f5f7f4;--card:#fff;--ink:#183732;--muted:#71807c;--a:#2f7168;--soft:#dcece7;--line:#e2e8e5}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.app{display:flex;min-height:100vh}
+aside{width:240px;background:#173f3a;color:#fff;position:fixed;inset:0 auto 0 0;padding:22px 15px}.logo{font-size:26px;font-weight:800;padding:8px 12px 25px}.logo i{color:#a9d9ce;font-style:normal}
+nav button{display:block;width:100%;background:none;color:#d9ece8;text-align:left;padding:12px;border-radius:12px;margin:3px 0}nav button:hover,nav button.on{background:#ffffff18;color:#fff}
+main{margin-left:240px;width:100%;padding:28px;max-width:1400px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+h1,h2,h3{margin-top:0}.muted,.tag{color:var(--muted)}.grid{display:grid;gap:18px}.two{grid-template-columns:repeat(2,1fr)}.three{grid-template-columns:repeat(3,1fr)}
+.card,.hero{border-radius:20px;padding:21px}.card{background:var(--card);border:1px solid var(--line);box-shadow:0 10px 30px #1837320c}.hero{background:linear-gradient(135deg,#173f3a,#2f7168);color:#fff}.hero p{color:#d9ece8}
+.btn{background:var(--a);color:#fff;padding:11px 15px;border-radius:11px;font-weight:700}.btn.soft{background:var(--soft);color:var(--ink)}.btn.light{background:#fff;color:var(--ink)}.btn.red{background:#f5dddd;color:#7b3030}
+.stat{font-size:30px;font-weight:800}.pill{display:inline-block;background:var(--soft);padding:5px 9px;border-radius:99px;font-size:12px;font-weight:700}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}.task{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line)}.task:last-child{border:0}.task.done b{text-decoration:line-through;color:#899692}.check{width:21px;height:21px;border:2px solid #aab8b4;border-radius:7px;background:#fff}.check.y{background:var(--a);border-color:var(--a);color:#fff}
+.progress{height:9px;background:#e7ece9;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--a)}input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
+.page{display:none}.page.show{display:block}.empty{text-align:center;padding:25px;color:var(--muted)}
+.timer{font-size:70px;font-weight:800;text-align:center;margin:15px}.bottom{display:none}
+@media(max-width:800px){aside{display:none}main{margin:0;padding:16px 14px 82px}.two,.three{grid-template-columns:1fr}.bottom{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);justify-content:space-around;padding:8px;z-index:5}.bottom button{background:none;color:var(--ink);font-size:11px}.bottom b{display:block;font-size:18px}.timer{font-size:52px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside><div class="logo">Focus<i>Life</i></div><nav>
+<button class="on" data-p="home">🏠 Dashboard</button><button data-p="plan">📅 Planner</button><button data-p="tasks">✅ Tasks</button><button data-p="focus">⏱️ Focus</button><button data-p="profile">👤 My setup</button><button data-p="progress">📊 Progress</button><button data-p="settings">⚙️ Settings</button>
+</nav><small style="position:absolute;bottom:20px;left:20px;color:#b9d5d0">Privacy-first prototype<br>Local browser data only</small></aside>
+<main>
+<header class="top"><div><small class="tag">FOCUSLIFE</small><h1 id="title">Good day 👋</h1></div><button class="btn soft" onclick="page('settings')">⚙ Settings</button></header>
+
+<section id="home" class="page show">
+<div class="hero"><div class="row"><div><span class="pill" id="mode">Personal</span><h2>Make today manageable.</h2><p>One clear plan, fewer distractions, and time to breathe.</p></div><button class="btn light" onclick="page('plan')">Build my day</button></div></div><br>
+<div class="grid three"><div class="card"><span class="muted">Today's progress</span><div class="stat" id="pct">0%</div><div class="progress"><i id="bar" style="width:0%"></i></div></div><div class="card"><span class="muted">Focus time</span><div class="stat" id="fm">0m</div></div><div class="card"><span class="muted">Tasks left</span><div class="stat" id="left">0</div></div></div><br>
+<div class="grid two"><div class="card"><h3>Today</h3><div id="today"></div></div><div class="card"><h3>Next action</h3><div id="next" class="empty">Add a task to begin.</div></div></div>
+</section>
+
+<section id="plan" class="page"><div class="card"><h2>📅 Build your day</h2><p class="muted">Set your available time and priority; FocusLife creates a flexible routine.</p>
+<div class="grid two"><div><label>Wake</label><input type="time" value="07:00"><label>Sleep target</label><input type="time" value="23:00"></div><div><label>Main goal</label><input id="goal" placeholder="e.g. Finish project"><label>Available hours</label><input id="hours" type="number" min="1" max="18" value="6"></div></div>
+<label>Fixed commitments</label><textarea rows="3" placeholder="e.g. 9:00–14:00 college&#10;16:00–18:00 work"></textarea><br><button class="btn" onclick="routine()">✨ Generate routine</button></div><br>
+<div class="card"><h3>Suggested routine</h3><div id="routine" class="empty">Generate a routine to see it here.</div></div></section>
+
+<section id="tasks" class="page"><div class="card"><h2>✅ Tasks</h2><div class="grid two"><div><label>Task</label><input id="new" placeholder="What needs to get done?"></div><div><label>Category</label><select id="cat"><option>Study</option><option>Work</option><option>Personal</option><option>Health</option><option>Other</option></select></div></div><br><button class="btn" onclick="add()">+ Add task</button></div><br><div class="card"><h3>My tasks</h3><div id="tasksList"></div></div></section>
+
+<section id="focus" class="page"><div class="card" style="text-align:center"><span class="pill">FOCUS MODE</span><h2>One thing at a time.</h2><p class="muted" id="focusTask">Choose a task first.</p><div class="timer" id="timer">25:00</div><button class="btn" id="start" onclick="toggle()">Start</button> <button class="btn soft" onclick="reset()">Reset</button>
+<div class="grid three" style="text-align:left;margin-top:25px"><div><label>Session</label><select id="len" onchange="setLen()"><option value="25">25 min</option><option value="50">50 min</option><option value="15">15 min</option><option value="5">5 min</option></select></div><div><label>Strictness</label><select><option>Balanced</option><option>Strict</option><option>Deep focus</option></select></div><div><label>Completion proof</label><select><option>Simple</option><option>Timer + completion</option><option>Note/evidence</option></select></div></div>
+<p class="tag">Browser demo: real app blocking/emergency-call handling would require supported mobile OS permissions.</p></div></section>
+
+<section id="profile" class="page"><div class="card"><h2>👤 My setup</h2><p class="muted">Works for different people, not only students.</p><div class="grid three"><div><label>I am a…</label><select id="type" onchange="save()"><option>Student</option><option>Office worker</option><option>Freelancer</option><option>Job seeker</option><option>Homemaker</option><option>Personal / custom</option></select></div><div><label>Energy</label><select><option>Balanced</option><option>Gentle</option><option>High</option></select></div><div><label>Planning style</label><select><option>Simple</option><option>Detailed</option><option>Flexible</option></select></div></div><label>My priorities</label><textarea rows="4" placeholder="Goals, routines, priorities…"></textarea></div><br><div class="card"><h3>📚 Student mode</h3><p class="muted">Subjects → chapters → topics → revision → mock tests can live here.</p><button class="btn soft" onclick="alert('Student mode preview: syllabus tracking, revision planning, weak-topic review and mock-test scheduling.')">Preview</button></div></section>
+
+<section id="progress" class="page"><div class="grid three"><div class="card"><span class="muted">Completion</span><div class="stat" id="p1">0%</div></div><div class="card"><span class="muted">Focus minutes</span><div class="stat" id="p2">0</div></div><div class="card"><span class="muted">Completed</span><div class="stat" id="p3">0</div></div></div><br><div class="card"><h2>📊 Progress</h2><p class="muted">A full release can show weekly trends, streaks, categories and missed-task patterns.</p><div class="progress" style="height:15px"><i id="pb" style="width:0%"></i></div><br><span class="pill" id="insight">No data yet</span></div></section>
+
+<section id="settings" class="page"><div class="card"><h2>⚙️ Settings</h2><h3>Focus & interruptions</h3>
+<div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)">Strict focus mode <input type="checkbox" checked style="width:auto"></div>
+<div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)">Allow emergency calls <input type="checkbox" checked style="width:auto"></div>
+<div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)">5-minute response window <input type="checkbox" checked style="width:auto"></div>
+<div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)">Mute distracting notifications <input type="checkbox" checked style="width:auto"></div>
+<h3>Privacy</h3><p>Local-first: <span class="pill">ON</span> &nbsp; Analytics sharing: <span class="pill">OFF</span> &nbsp; Basic account: <span class="pill">NOT REQUIRED</span></p>
+<p class="muted">This prototype uses only your browser's localStorage. It has no login, analytics SDK or external data service.</p>
+<button class="btn soft" onclick="exportData()">Export data</button> <button class="btn red" onclick="clearData()">Delete local data</button>
+<h3>Language</h3><select><option>English</option><option>বাংলা</option></select></div></section>
+</main></div>
+<div class="bottom"><button onclick="page('home')"><b>🏠</b>Home</button><button onclick="page('tasks')"><b>✅</b>Tasks</button><button onclick="page('focus')"><b>⏱️</b>Focus</button><button onclick="page('progress')"><b>📊</b>Progress</button><button onclick="page('settings')"><b>⚙️</b>Settings</button></div>
+
+<script>
+const K='focuslife_public_v1';let d=JSON.parse(localStorage.getItem(K)||'{"tasks":[],"focus":0,"type":"Student"}');let timer=null,sec=1500;
+function save(){localStorage.setItem(K,JSON.stringify(d));render()}function esc(x){return x.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x.dataset.p===id));let t={home:'Good day 👋',plan:'Plan your day',tasks:'Your tasks',focus:'Focus Mode',profile:'My setup',progress:'Your progress',settings:'Settings'};document.getElementById('title').textContent=t[id]}
+document.querySelectorAll('nav button').forEach(x=>x.onclick=()=>page(x.dataset.p));
+function add(){let v=document.getElementById('new').value.trim();if(!v)return;d.tasks.push({id:Date.now(),text:v,cat:document.getElementById('cat').value,done:false});document.getElementById('new').value='';save()}
+function toggleTask(id){let t=d.tasks.find(x=>x.id===id);t.done=!t.done;save()}
+function del(id){d.tasks=d.tasks.filter(x=>x.id!==id);save()}
+function render(){let total=d.tasks.length,done=d.tasks.filter(x=>x.done).length,p=total?Math.round(done/total*100):0;document.getElementById('mode').textContent=d.type;document.getElementById('pct').textContent=p+'%';document.getElementById('bar').style.width=p+'%';document.getElementById('fm').textContent=d.focus+'m';document.getElementById('left').textContent=total-done;document.getElementById('p1').textContent=p+'%';document.getElementById('p2').textContent=d.focus;document.getElementById('p3').textContent=done;document.getElementById('pb').style.width=p+'%';document.getElementById('insight').textContent=total?(done===total?'All planned tasks completed 🎉':done+' of '+total+' completed'):'Add a few realistic tasks';let l=d.tasks.map(t=>`<div class="task ${t.done?'done':''}"><button class="check ${t.done?'y':''}" onclick="toggleTask(${t.id})">${t.done?'✓':''}</button><div style="flex:1"><b>${esc(t.text)}</b><div class="tag">${esc(t.cat)}</div></div><button class="btn red" style="padding:5px 9px" onclick="del(${t.id})">×</button></div>`).join('');document.getElementById('tasksList').innerHTML=l||'<div class="empty">No tasks yet.</div>';document.getElementById('today').innerHTML=l||'<div class="empty">Your day is empty.</div>';let n=d.tasks.find(x=>!x.done);document.getElementById('next').innerHTML=n?`<span class="pill">${esc(n.cat)}</span><h3>${esc(n.text)}</h3><button class="btn" onclick="page('focus')">Start focus</button>`:'<div class="empty">Nothing urgent. 🌿</div>'}
+function routine(){let g=esc(document.getElementById('goal').value.trim()||'your main goal'),h=+document.getElementById('hours').value||6,n=Math.max(2,Math.min(8,Math.round(h/1.5)));document.getElementById('routine').innerHTML=Array.from({length:n},(_,i)=>`<div class="task"><span class="pill">${i%2?'RESET':'FOCUS'}</span><div><b>${i%2?'10–15 min break':'Work on '+g}</b><div class="tag">${i%2?'Move, hydrate, breathe':'Single-task • reduce distractions'}</div></div></div>`).join('')}
+function setLen(){sec=+document.getElementById('len').value*60;clock()}function clock(){document.getElementById('timer').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
+function toggle(){if(timer){clearInterval(timer);timer=null;document.getElementById('start').textContent='Start';return}document.getElementById('start').textContent='Pause';timer=setInterval(()=>{sec--;clock();if(sec<=0){clearInterval(timer);timer=null;d.focus+=+document.getElementById('len').value;save();alert('Focus session complete 🎉');setLen();document.getElementById('start').textContent='Start'}},1000)}
+function reset(){if(timer){clearInterval(timer);timer=null}setLen();document.getElementById('start').textContent='Start'}
+function exportData(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));a.download='focuslife-data.json';a.click()}
+function clearData(){if(confirm('Delete all local FocusLife data?')){localStorage.removeItem(K);location.reload()}}
+document.getElementById('type').value=d.type||'Student';render();clock();
+</script>
+</body></html>
